@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuglys Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0d0d0d;
+      color: #f1f1f1;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      color: #ff44cc;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px #ff44cc55;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #222;
+      border-radius: 10px;
+    }
+    .options label {
+      display: block;
+      background: #333;
+      margin: 6px 0;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options label:hover {
+      background: #444;
+    }
+    button {
+      background: #ff44cc;
+      border: none;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #ff66dd;
+    }
+    .result {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 18px;
+      color: #00ff99;
+    }
+    .correct {
+      background: #204d36 !important;
+    }
+    .wrong {
+      background: #4d2020 !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>💥 Fuglys Quiz 💥</h1>
+  <div class="quiz-container" id="quiz"></div>
+  <div style="text-align:center;">
+    <button onclick="submitQuiz()">Submit Quiz</button>
+  </div>
+  <div class="result" id="result"></div>
+
+  <script>
+    const quizData = [
+      { question: "What is Fuglys described as on the Linktree page?",
+        options: ["A music label", "A video game studio", "The first NFT collection built on GravityChain", "A DeFi platform"],
+        correct: 2 },
+
+      { question: "On which blockchain or infrastructure is Fuglys built?",
+        options: ["Ethereum", "Solana", "GravityChain", "Binance Smart Chain"],
+        correct: 2 },
+
+      { question: "Which of these is not directly linked from the Fuglys Linktree page?",
+        options: ["X (formerly Twitter)", "Discord", "Official website / homepage", "Galxe Quest"],
+        correct: 2 },
+
+      { question: "What type of project is Fuglys likely to be?",
+        options: ["NFT / digital collectibles", "Physical product marketplace", "Streaming service", "Traditional banking service"],
+        correct: 0 },
+
+      { question: "Which social or community platform does Fuglys use, based on the Linktree?",
+        options: ["Telegram", "Discord", "Reddit", "Facebook"],
+        correct: 1 },
+
+      { question: "What is the Galxe link most likely used for in an NFT project context?",
+        options: ["Selling physical goods", "Hosting code repositories", "Quest or reward campaigns / on-chain tasks", "Streaming video content"],
+        correct: 2 },
+
+      { question: "If Fuglys is 'the first NFT collection built on GravityChain,' what's an implied benefit?",
+        options: ["It uses a proprietary smartphone OS", "It leverages the unique attributes or technology of GravityChain", "It is centralized and not on blockchain", "It ignores blockchain altogether"],
+        correct: 1 },
+
+      { question: "What is the purpose of having a Discord link for an NFT project like Fuglys?",
+        options: ["To host marketplace listings", "For community building, announcements, and chat", "To host video courses", "To process payments"],
+        correct: 1 },
+
+      { question: "What is a user most likely to do via the 'Galxe Quest' link?",
+        options: ["File taxes", "Participate in tasks, earn rewards, or complete quests", "Stream live music", "Reserve a physical product"],
+        correct: 1 },
+
+      { question: "Given the limited info on the Linktree, what’s a good next step to fully understand the project?",
+        options: ["Guess randomly", "Ask for the whitepaper, roadmap, or tokenomics", "Assume the project is finished", "Ignore community feedback"],
+        correct: 1 },
+
+      { question: "What does the name 'Fuglys' represent in the lore?",
+        options: ["A blend of 'Funny' and 'Ugly'", "A fusion of 'Fucking' and 'Ugly'", "An ancient Galxe curse word", "A shortened form of 'Future Galaxy Leaders'"],
+        correct: 1 },
+
+      { question: "What is the Fuglys’ rallying cry?",
+        options: ["Perfection Prevails!", "Shine in Symmetry!", "Stay Fuglysh!", "Beauty Above All!"],
+        correct: 2 },
+
+      { question: "Where did the Fuglys find refuge after rebelling against perfection?",
+        options: ["In the sterile harmony of the Galxe", "In the black hole where they were born", "In the Gravity Chain", "On a flawless symmetrical planet"],
+        correct: 2 },
+
+      { question: "What was the purpose of the Oath of Chaos?",
+        options: ["To restore perfection to the cosmos", "To embrace grotesque allure and reject conformity", "To summon the forces of perfection", "To create symmetrical stars and planets"],
+        correct: 1 },
+
+      { question: "How many Fuglys NFTs exist as members of the Legion of Misfits?",
+        options: ["1111", "2025", "2222", "5000"],
+        correct: 2 }
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+    const resultContainer = document.getElementById("result");
+
+    quizData.forEach((q, index) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<h3>Q${index + 1}. ${q.question}</h3>
+        <div class="options">
+          ${q.options.map((opt, i) => `
+            <label>
+              <input type="radio" name="q${index}" value="${i}"> ${opt}
+            </label>
+          `).join("")}
+        </div>`;
+      quizContainer.appendChild(div);
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      const questions = document.querySelectorAll(".question");
+
+      quizData.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = questions[i].querySelectorAll("label");
+        if (selected) {
+          const answer = parseInt(selected.value);
+          if (answer === q.correct) {
+            score++;
+            labels[answer].classList.add("correct");
+          } else {
+            labels[answer].classList.add("wrong");
+            labels[q.correct].classList.add("correct");
+          }
+        } else {
+          labels[q.correct].classList.add("correct");
+        }
+      });
+
+      resultContainer.innerHTML = `<h2>You scored ${score} / ${quizData.length} 🎉</h2>`;
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
